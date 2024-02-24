@@ -1,8 +1,16 @@
 import 'dart:collection';
 import '../models/point_model.dart';
 
-
 class BFS {
+  List<PointModel> getShortestPath(
+      List<List<String>> field, PointModel startPoint, PointModel endPoint) {
+    Map<PointModel, List<PointModel>> gridMap = getNeighbours(field);
+    List<PointModel> searched = search(gridMap, startPoint, endPoint);
+    List<PointModel> path = buildPath(searched, gridMap, endPoint);
+
+    return path;
+  }
+
   /// Get neighbors for a given position in the maze
   Map<PointModel, List<PointModel>> getNeighbours(List<List<String>> grid) {
     Map<PointModel, List<PointModel>> gridMap = {};
@@ -19,7 +27,8 @@ class BFS {
                 int newRow = i + rowOffset;
                 int newCol = j + colOffset;
 
-                if (isValidPosition(newRow, newCol, grid) && grid[newRow][newCol] == '.') {
+                if (isValidPosition(newRow, newCol, grid) &&
+                    grid[newRow][newCol] == '.') {
                   gridMap[currentPoint]!.add(PointModel(x: newRow, y: newCol));
                 }
               }
@@ -36,8 +45,7 @@ class BFS {
     return row >= 0 && row < grid.length && col >= 0 && col < grid[row].length;
   }
 
-
-/// Find the shortest path in the maze
+  /// Find the shortest path in the maze
   List<PointModel> search(Map<PointModel, List<PointModel>> gridMap,
       PointModel start, PointModel end) {
     // If the start and end points match, return a list with one point - the start point
@@ -99,15 +107,5 @@ class BFS {
     }
 
     return List.from(roadReverse.reversed);
-  }
-
-  List<PointModel> getShortestPath(
-      List<List<String>> field, PointModel startPoint, PointModel endPoint) {
-
-    Map<PointModel, List<PointModel>> gridMap = getNeighbours(field);
-    List<PointModel> searched = search(gridMap, startPoint, endPoint);
-    List<PointModel> path = buildPath(searched, gridMap, endPoint);
-
-    return path;
   }
 }
